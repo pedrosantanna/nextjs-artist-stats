@@ -66,7 +66,7 @@ export default function Home() {
       </div>
       <footer className="w-full text-center py-4 mt-8 border-t">
         <p className="text-gray-600">
-          Made by{' '}
+          Created by{' '}
           <a
             href="https://github.com/pedrosantanna"
             target="_blank"
