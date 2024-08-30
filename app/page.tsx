@@ -56,18 +56,19 @@ export default function Home() {
             <MagnifyingGlassIcon className="h-6 w-6" />
           </button>
           {suggestions.length > 0 && (
-            <ul className="absolute z-10 w-full bg-white border border-gray-300 rounded-lg shadow-lg mt-2 max-h-60 overflow-y-auto">
-              {suggestions.map((artist) => (
-                <li
-                  key={artist.id}
-                  className="p-4 cursor-pointer hover:bg-gray-100"
-                  onClick={() => handleSearch(artist)}
-                >
-                  {artist.name}
-                </li>
-              ))}
-            </ul>
-          )}
+          <ul className="absolute z-10 w-full bg-white border border-gray-300 rounded-lg shadow-lg mt-2 max-h-60 overflow-y-auto">
+            {suggestions.map((artist) => (
+              <li
+                key={artist.id}
+                className="p-4 cursor-pointer hover:bg-gray-100 text-gray-900"
+                onClick={() => handleSearch(artist)}
+              >
+                {artist.name}
+              </li>
+            ))}
+          </ul>
+        )}
+
         </div>
         {error && <p className="text-red-500 text-center mb-4">{error}</p>}
         {loading ? (
