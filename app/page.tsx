@@ -73,11 +73,12 @@ export default function Home() {
             rel="noopener noreferrer"
             className="text-blue-500 hover:underline"
           >
-            Pedro Sant'Anna
+            Pedro Sant&#39;Anna
           </a>{' '}
           - 2024
         </p>
       </footer>
+
     </div>
   );
 }
