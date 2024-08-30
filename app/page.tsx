@@ -1,16 +1,26 @@
-"use client"; // Adicione isso no topo do arquivo
+"use client";
 
 import { useState } from 'react';
 import { getSpotifyArtist } from '../app/lib/spotify';
-import ArtistComparison from '../app/components/ArtistComparison';
+import { getDeezerArtist } from '../app/lib/deezer';
+import ArtistComparison from './components/ArtistComparison';
 
-const Home = () => {
+export default function Home() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [spotifyArtist, setSpotifyArtist] = useState(null);
+  const [spotifyArtist, setSpotifyArtist] = useState<any>(null);
+  const [deezerArtist, setDeezerArtist] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSearch = async () => {
-    const spotify = await getSpotifyArtist(searchTerm);
-    setSpotifyArtist(spotify);
+    setError(null);
+    try {
+      const spotify = await getSpotifyArtist(searchTerm);
+      const deezer = await getDeezerArtist(searchTerm);
+      setSpotifyArtist(spotify);
+      setDeezerArtist(deezer);
+    } catch (err: any) {
+      setError(err.message);
+    }
   };
 
   return (
@@ -29,13 +39,13 @@ const Home = () => {
       >
         Search
       </button>
-      {spotifyArtist && (
+      {error && <p className="text-red-500 mt-4">{error}</p>}
+      {spotifyArtist && deezerArtist && (
         <ArtistComparison
           spotifyArtist={spotifyArtist}
+          deezerArtist={deezerArtist}
         />
       )}
     </div>
   );
-};
-
-export default Home;
+}

@@ -1,12 +1,11 @@
-"use client"; // Adicione isso no topo do arquivo
-
 import React from 'react';
 
 type ArtistProps = {
   spotifyArtist: any;
+  deezerArtist: any;
 };
 
-const ArtistComparison: React.FC<ArtistProps> = ({ spotifyArtist }) => {
+const ArtistComparison: React.FC<ArtistProps> = ({ spotifyArtist, deezerArtist }) => {
   return (
     <div className="grid grid-cols-2 gap-4">
       <div>
@@ -16,7 +15,9 @@ const ArtistComparison: React.FC<ArtistProps> = ({ spotifyArtist }) => {
         <p>Popularity: {spotifyArtist.popularity}</p>
       </div>
       <div>
-        deezer aqui
+        <h2 className="text-xl font-bold">{deezerArtist.name} (Deezer)</h2>
+        <img src={deezerArtist.picture_medium} alt={deezerArtist.name} />
+        <p>Followers: {deezerArtist.nb_fan}</p>
       </div>
     </div>
   );
