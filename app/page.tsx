@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from 'react';
-import { getSpotifyArtist } from '../app/lib/spotify';
+import { useState, useEffect } from 'react';
+import { searchSpotifyArtists } from '../app/lib/spotify';
 import { getDeezerArtist } from '../app/lib/deezer';
 import ArtistComparison from './components/ArtistComparison';
 import Loader from './components/Loader';
@@ -9,24 +9,28 @@ import { MagnifyingGlassIcon } from '@heroicons/react/24/solid';
 
 export default function Home() {
   const [searchTerm, setSearchTerm] = useState('');
+  const [suggestions, setSuggestions] = useState<any[]>([]);
   const [spotifyArtist, setSpotifyArtist] = useState<any>(null);
   const [deezerArtist, setDeezerArtist] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const handleSearch = async () => {
-    if (!searchTerm.trim()) {
-      setError('Please enter a valid artist name');
-      return;
+  useEffect(() => {
+    if (searchTerm.trim().length > 2) {
+      searchSpotifyArtists(searchTerm).then(setSuggestions).catch((err) => console.error(err));
+    } else {
+      setSuggestions([]);
     }
+  }, [searchTerm]);
 
+  const handleSearch = async (artist: any) => {
     setLoading(true);
     setError(null);
     try {
-      const spotify = await getSpotifyArtist(searchTerm);
-      const deezer = await getDeezerArtist(searchTerm);
-      setSpotifyArtist(spotify);
+      const deezer = await getDeezerArtist(artist.name);
+      setSpotifyArtist(artist);
       setDeezerArtist(deezer);
+      setSuggestions([]);
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -47,11 +51,23 @@ export default function Home() {
             placeholder="Search for an artist"
           />
           <button
-            onClick={handleSearch}
             className="absolute inset-y-0 right-0 p-3 flex items-center bg-blue-500 text-white rounded-r-lg hover:bg-blue-600 focus:outline-none"
           >
             <MagnifyingGlassIcon className="h-6 w-6" />
           </button>
+          {suggestions.length > 0 && (
+            <ul className="absolute z-10 w-full bg-white border border-gray-300 rounded-lg shadow-lg mt-2 max-h-60 overflow-y-auto">
+              {suggestions.map((artist) => (
+                <li
+                  key={artist.id}
+                  className="p-4 cursor-pointer hover:bg-gray-100"
+                  onClick={() => handleSearch(artist)}
+                >
+                  {artist.name}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
         {error && <p className="text-red-500 text-center mb-4">{error}</p>}
         {loading ? (
@@ -66,7 +82,7 @@ export default function Home() {
       </div>
       <footer className="w-full text-center py-4 mt-8 border-t">
         <p className="text-gray-600">
-          Created by{' '}
+          Made by{' '}
           <a
             href="https://github.com/pedrosantanna"
             target="_blank"
@@ -78,7 +94,6 @@ export default function Home() {
           - 2024
         </p>
       </footer>
-
     </div>
   );
 }
