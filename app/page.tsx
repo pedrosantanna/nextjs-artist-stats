@@ -3,13 +3,19 @@
 import { useState, useEffect } from 'react';
 import { searchSpotifyArtists } from '../app/lib/spotify';
 import { getDeezerArtist } from '../app/lib/deezer';
+import { calculateSimilarity } from '../app/lib/utils';
 import ArtistComparison from './components/ArtistComparison';
 import Loader from './components/Loader';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/solid';
 
+type Artist = {
+  id: string;
+  name: string;
+};
+
 export default function Home() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [suggestions, setSuggestions] = useState<any[]>([]);
+  const [suggestions, setSuggestions] = useState<Artist[]>([]);
   const [spotifyArtist, setSpotifyArtist] = useState<any>(null);
   const [deezerArtist, setDeezerArtist] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
@@ -17,13 +23,20 @@ export default function Home() {
 
   useEffect(() => {
     if (searchTerm.trim().length > 2) {
-      searchSpotifyArtists(searchTerm).then(setSuggestions).catch((err) => console.error(err));
+      searchSpotifyArtists(searchTerm).then((artists: Artist[]) => {
+        const sortedArtists = artists.sort((a: Artist, b: Artist) => {
+          const similarityA = calculateSimilarity(searchTerm.toLowerCase(), a.name.toLowerCase());
+          const similarityB = calculateSimilarity(searchTerm.toLowerCase(), b.name.toLowerCase());
+          return similarityB - similarityA; // Ordena do mais semelhante para o menos semelhante
+        });
+        setSuggestions(sortedArtists);
+      }).catch((err) => console.error(err));
     } else {
       setSuggestions([]);
     }
   }, [searchTerm]);
 
-  const handleSearch = async (artist: any) => {
+  const handleSearch = async (artist: Artist) => {
     setLoading(true);
     setError(null);
     try {
@@ -56,19 +69,18 @@ export default function Home() {
             <MagnifyingGlassIcon className="h-6 w-6" />
           </button>
           {suggestions.length > 0 && (
-          <ul className="absolute z-10 w-full bg-white border border-gray-300 rounded-lg shadow-lg mt-2 max-h-60 overflow-y-auto">
-            {suggestions.map((artist) => (
-              <li
-                key={artist.id}
-                className="p-4 cursor-pointer hover:bg-gray-100 text-gray-900"
-                onClick={() => handleSearch(artist)}
-              >
-                {artist.name}
-              </li>
-            ))}
-          </ul>
-        )}
-
+            <ul className="absolute z-10 w-full bg-white border border-gray-300 rounded-lg shadow-lg mt-2 max-h-60 overflow-y-auto">
+              {suggestions.map((artist: Artist) => (
+                <li
+                  key={artist.id}
+                  className="p-4 cursor-pointer hover:bg-gray-100 text-gray-900"
+                  onClick={() => handleSearch(artist)}
+                >
+                  {artist.name}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
         {error && <p className="text-red-500 text-center mb-4">{error}</p>}
         {loading ? (

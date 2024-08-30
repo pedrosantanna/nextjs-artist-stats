@@ -4,11 +4,9 @@ export async function GET(req: NextRequest) {
   const authOptions: RequestInit = {
     method: 'POST',
     headers: {
-      Authorization:
-        'Basic ' +
-        Buffer.from(
-          `${process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID}:${process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_SECRET}`
-        ).toString('base64'),
+      Authorization: `Basic ${Buffer.from(
+        `${process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID}:${process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_SECRET}`
+      ).toString('base64')}`,
       'Content-Type': 'application/x-www-form-urlencoded',
     },
     body: 'grant_type=client_credentials',

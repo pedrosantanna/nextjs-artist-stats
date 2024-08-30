@@ -19,6 +19,5 @@ export async function searchSpotifyArtists(artistName: string) {
   }
 
   const data = await response.json();
-
   return data.artists.items; // retorna todos os artistas encontrados
 }
