@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { searchSpotifyArtists } from '../app/lib/spotify';
 import { getDeezerArtist } from '../app/lib/deezer';
-import { calculateSimilarity } from '../app/lib/utils';
+import { calculateWeightedSimilarity } from '../app/lib/utils';
 import ArtistComparison from './components/ArtistComparison';
 import Loader from './components/Loader';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/solid';
@@ -24,9 +24,22 @@ export default function Home() {
   useEffect(() => {
     if (searchTerm.trim().length > 2) {
       searchSpotifyArtists(searchTerm).then((artists: Artist[]) => {
+        const totalItems = artists.length;
         const sortedArtists = artists.sort((a: Artist, b: Artist) => {
-          const similarityA = calculateSimilarity(searchTerm.toLowerCase(), a.name.toLowerCase());
-          const similarityB = calculateSimilarity(searchTerm.toLowerCase(), b.name.toLowerCase());
+          const indexA = artists.indexOf(a);
+          const indexB = artists.indexOf(b);
+          const similarityA = calculateWeightedSimilarity(
+            searchTerm.toLowerCase(),
+            a.name.toLowerCase(),
+            indexA,
+            totalItems
+          );
+          const similarityB = calculateWeightedSimilarity(
+            searchTerm.toLowerCase(),
+            b.name.toLowerCase(),
+            indexB,
+            totalItems
+          );
           return similarityB - similarityA; // Ordena do mais semelhante para o menos semelhante
         });
         setSuggestions(sortedArtists);
