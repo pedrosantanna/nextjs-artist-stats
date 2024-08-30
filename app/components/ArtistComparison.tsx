@@ -1,4 +1,5 @@
-// components/ArtistComparison.tsx
+"use client"; // Adicione isso no topo do arquivo
+
 import React from 'react';
 
 type ArtistProps = {
@@ -15,8 +16,7 @@ const ArtistComparison: React.FC<ArtistProps> = ({ spotifyArtist }) => {
         <p>Popularity: {spotifyArtist.popularity}</p>
       </div>
       <div>
-        <h2 className="text-xl font-bold">Nome no deezer</h2>
-        <p>Followers: XXXX</p>
+        deezer aqui
       </div>
     </div>
   );

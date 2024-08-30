@@ -1,3 +1,5 @@
+"use client"; // Adicione isso no topo do arquivo
+
 import { useState } from 'react';
 import { getSpotifyArtist } from '../app/lib/spotify';
 import ArtistComparison from '../app/components/ArtistComparison';
@@ -5,13 +7,10 @@ import ArtistComparison from '../app/components/ArtistComparison';
 const Home = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [spotifyArtist, setSpotifyArtist] = useState(null);
-  //const [deezerArtist, setDeezerArtist] = useState(null);
 
   const handleSearch = async () => {
     const spotify = await getSpotifyArtist(searchTerm);
-    //const deezer = await getDeezerArtist(searchTerm);
     setSpotifyArtist(spotify);
-    //setDeezerArtist(deezer);
   };
 
   return (
@@ -33,7 +32,6 @@ const Home = () => {
       {spotifyArtist && (
         <ArtistComparison
           spotifyArtist={spotifyArtist}
-          //deezerArtist={deezerArtist}
         />
       )}
     </div>
