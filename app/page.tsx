@@ -25,16 +25,19 @@ export default function Home() {
   };
 
   return (
+    
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center py-8 px-4 sm:px-6 lg:px-8">
       <h1 className="text-4xl font-bold text-center text-gray-800 mb-8">Artist Comparator</h1>
+
       <div className="relative w-full max-w-2xl mb-8">
-        <input
-          type="text"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full p-4 pr-12 text-lg border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Search for an artist"
-        />
+      <input
+  type="text"
+  value={searchTerm}
+  onChange={(e) => setSearchTerm(e.target.value)}
+  className="w-full p-4 pr-12 text-lg text-gray-900 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+  placeholder="Search for an artist"
+/>
+
         <button
           onClick={handleSearch}
           className="absolute inset-y-0 right-0 p-3 flex items-center bg-blue-500 text-white rounded-r-lg hover:bg-blue-600 focus:outline-none"
